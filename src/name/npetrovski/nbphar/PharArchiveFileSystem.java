@@ -59,7 +59,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
     private transient Object closeSync = new Object();
     private int checkTime = 10000;
 
-    private transient PharArchiveFile altArchive;
+    private transient PharArchiveFile af;
 
     /**
      * Time of request for opening of pharArchiveFile.
@@ -142,7 +142,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
         setSystemName(s);
     }
 
-    private void setArchiveFile(final File aRoot, boolean refreshRoot, boolean openAltArchive)
+    private void setArchiveFile(final File aRoot, boolean refreshRoot, boolean openArchive)
             throws IOException, PropertyVetoException {
         if (!aRoot.equals(FileUtil.normalizeFile(aRoot))) {
             throw new IllegalArgumentException(
@@ -178,11 +178,11 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
         s = aRoot.getAbsolutePath();
         s = s.intern();
 
-        PharArchiveFile tempAltArchive = null;
+        PharArchiveFile tempArchive = null;
 
-        if (openAltArchive) {
+        if (openArchive) {
             try {
-                tempAltArchive = new PharArchiveFile(s);
+                tempArchive = new PharArchiveFile(s);
                 LOGGER.log(Level.FINE, "opened: " + System.currentTimeMillis() + "   " + s);
             } catch (ZipException e) {
                 throw new IOException(NbBundle.getMessage(PharArchiveFileSystem.class, "EXC_NotValidJarFile2", e.getLocalizedMessage(), s));
@@ -193,7 +193,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
             _setSystemName(s);
 
             closeCurrentRoot(false);
-            setArchive(tempAltArchive);
+            setArchive(tempArchive);
             openRequestTime = System.currentTimeMillis();
             root = new File(s);
 
@@ -286,7 +286,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
                 PharArchiveFile j = reOpenArchiveFile();
 
                 if (j != null) {
-                    PharArchiveFile.ArchiveEntry je = j.getAltArchiveEntry(name);
+                    PharArchiveFile.ArchiveEntry je = j.getArchiveEntry(name);
 
                     if (je != null) {
                         if (je.getSize() < MEM_STREAM_SIZE) {
@@ -474,7 +474,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
 
                 PharArchiveFile.ArchiveEntry je = null;
                 if (j != null) {
-                    je = j.getAltArchiveEntry(file);
+                    je = j.getArchiveEntry(file);
                 }
 
                 if (je != null) {
@@ -484,7 +484,6 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
         } catch (IOException iox) {
         }
 
-        //return getArchive(false).newAltArchiveEntry(file);
         return null;
     }
 
@@ -716,8 +715,8 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
         };
     }
 
-    private void setArchive(PharArchiveFile tempAltArchive) {
-        this.altArchive = tempAltArchive;
+    private void setArchive(PharArchiveFile af) {
+        this.af = af;
     }
 
     //

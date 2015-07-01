@@ -26,7 +26,7 @@ public class PharArchiveFile {
         this(new File(path));
     }
 
-    public ArchiveEntry getAltArchiveEntry(String name) throws IOException {
+    public ArchiveEntry getArchiveEntry(String name) throws IOException {
         if (name == null) {
             throw new IllegalArgumentException("Illegal name");
         }
@@ -43,8 +43,8 @@ public class PharArchiveFile {
         return entry;
     }
 
-    public boolean isAltArchive() {
-        return _source._isAltArchive;
+    public boolean isArchive() {
+        return _source._isArchive;
     }
 
     public String getName() {
@@ -138,7 +138,7 @@ public class PharArchiveFile {
         @SuppressWarnings("unchecked")
         Map<String, ArchiveEntry> _entries = Collections.EMPTY_MAP;
 
-        boolean _isAltArchive;
+        boolean _isArchive;
 
         SourceHandler(File file, String name) throws IOException {
             _name = name;
@@ -155,7 +155,7 @@ public class PharArchiveFile {
 
         PharSourceHandler(File file, String name) throws IOException {
             super(file, name);
-            _isAltArchive = true;
+            _isArchive = true;
         }
 
         @Override
@@ -164,7 +164,7 @@ public class PharArchiveFile {
                 return;
             }
             _hasEnumerated = true;
-            if (!_isAltArchive) {
+            if (!_isArchive) {
                 return;
             }
 

@@ -219,7 +219,7 @@ public final class PharFileUtil {
 
         if (b == null) {
             try {
-                b = Boolean.valueOf(new PharArchiveFile("#tmp#").isAltArchive());
+                b = Boolean.valueOf(new PharArchiveFile("#tmp#").isArchive());
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }

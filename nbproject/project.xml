@@ -80,7 +80,14 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>de.ailis.pherialize</package>
+                <package>name.npetrovski.jphar</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/jphar-1.0.2.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jphar-1.0.2.jar</binary-origin>
+            </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-lang3-3.4.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/commons-lang3-3.4.jar</binary-origin>
