@@ -1,57 +1,99 @@
 package name.npetrovski.nbphar;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import javax.swing.Action;
+import name.npetrovski.jphar.Phar;
+import name.npetrovski.jphar.PharCompression;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFilter;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.nodes.PropertySupport;
+import org.openide.nodes.Sheet;
 import org.openide.util.RequestProcessor;
+import org.openide.filesystems.FileUtil;
 
 final class PharArchiveNode extends DataNode {
 
     private static final RequestProcessor RP = new RequestProcessor(PharArchiveNode.class.getName(), 1, false, false);
 
+    private Phar base;
+
     public PharArchiveNode(PharArchiveDataObject obj) {
         this(obj, new DummyChildren());
+        try {
+            this.base = new Phar(FileUtil.toFile(this.getDataObject().getPrimaryFile()));
+        } catch (IOException ex) {
+            // shouldnt
+        }
     }
 
     private PharArchiveNode(PharArchiveDataObject obj, DummyChildren c) {
         super(obj, c);
-        c.attachAltArchiveNode(this);
-        //setIconBaseWithExtension("name/npetrovski/nbphar/phar.png"); // NOI18N
+        c.attachArchiveNode(this);
     }
 
-//    @Override
-//    protected Sheet createSheet() {
-//       Sheet s = Sheet.createDefault();
-//        try {
-//            s.get(Sheet.PROPERTIES).put(new LineCountProperty(this, this.getDataObject().getPrimaryFile()));
-//        } catch (Exception ex) {
-//            ErrorManager.getDefault().notify(ex);
-//        }
-//        return s;
-//    }
-//
-//    private class LineCountProperty extends ReadOnly<Integer> {
-//
-//        private final PharArchiveNode node;
-//        private final FileObject fo;
-//
-//        public LineCountProperty(PharArchiveNode node, FileObject fo) {
-//            super("lineCount", Integer.class, "Line Count", "Number of Lines");
-//            this.node = node;
-//            this.fo = fo;
-//        }
-//
-//        @Override
-//        public Integer getValue() throws IllegalAccessException, InvocationTargetException {
-//            int lineCount = 0;
-//
-//            return 10;
-//        }
-//    }
+    @Override
+    protected Sheet createSheet() {
+        Sheet sheet = Sheet.createDefault();
+        Sheet.Set def = sheet.get(Sheet.PROPERTIES);
+        if (def == null) {
+            def = Sheet.createPropertiesSet();
+            sheet.put(def);
+        }
+        def.put(new PropertySupport.Name(this));
+
+        Property<String> version = new PropertySupport.ReadOnly<String>("pharVersion", String.class, "Version", "Phar Version") {
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                return PharArchiveNode.this.base.getVersion();
+            }
+        };
+
+        def.put(version);
+
+        Property<String> compression = new PropertySupport.ReadOnly<String>("pharCompression", String.class, "Compression", "Phar Compression") {
+            @Override
+            public String getValue() throws IllegalAccessException, InvocationTargetException {
+                PharCompression c = PharArchiveNode.this.base.getCompression();
+
+                if (c.equals(PharCompression.BZIP2)) {
+                    return "BZIP2";
+                } else if (c.equals(PharCompression.GZIP)) {
+                    return "GZIP";
+                } else {
+                    return "NONE";
+                }
+            }
+        };
+
+        def.put(compression);
+
+        if (this.base.getMetadata().size() > 0) {
+            Sheet.Set metaset = Sheet.createPropertiesSet();
+            metaset.setDisplayName("Metadata");
+            metaset.setName("Metadata");
+            metaset.setValue("Metadata", "Metadata");
+
+            for (final Map.Entry<String, String> entry : this.base.getMetadata().entrySet()) {
+                metaset.put(new PropertySupport.ReadOnly<String>(entry.getKey(), String.class, entry.getKey(), null) {
+                    @Override
+                    public String getValue() throws IllegalAccessException, InvocationTargetException {
+                        return entry.getValue();
+                    }
+                });
+            }
+
+            sheet.put(metaset);
+        }
+
+        return sheet;
+    }
 
     @Override
     public Action getPreferredAction() {
@@ -87,7 +129,7 @@ final class PharArchiveNode extends DataNode {
             RP.post(this);
         }
 
-        private void attachAltArchiveNode(PharArchiveNode archiveNode) {
+        private void attachArchiveNode(PharArchiveNode archiveNode) {
             this.node = archiveNode;
         }
 

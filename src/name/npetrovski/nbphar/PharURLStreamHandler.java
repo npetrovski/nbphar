@@ -5,7 +5,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-
+@SuppressWarnings( "deprecation" )
 public class PharURLStreamHandler extends URLStreamHandler {
 
     @Override

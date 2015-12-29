@@ -29,6 +29,7 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
+@SuppressWarnings({"unchecked","deprecation"})
 @ServiceProvider(service = URLMapper.class, position = 0)
 public class PharArchiveURLMapper extends URLMapper {
 

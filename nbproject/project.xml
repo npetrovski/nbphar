@@ -7,6 +7,14 @@
             <standalone/>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.netbeans.api.templates</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.6.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.core.multiview</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -80,21 +88,18 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages>
-                <package>de.ailis.pherialize</package>
-                <package>name.npetrovski.jphar</package>
-            </public-packages>
+            <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/jphar-1.0.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jphar-1.0.2.jar</binary-origin>
+                <runtime-relative-path>ext/commons-compress-1.9.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/commons-compress-1.9.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-lang3-3.4.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/commons-lang3-3.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-compress-1.9.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/commons-compress-1.9.jar</binary-origin>
+                <runtime-relative-path>ext/jphar-1.0.3.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jphar-1.0.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

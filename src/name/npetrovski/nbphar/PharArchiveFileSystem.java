@@ -35,7 +35,7 @@ import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Utilities;
+import org.openide.util.BaseUtilities;
 
 public class PharArchiveFileSystem extends AbstractFileSystem {
 
@@ -375,7 +375,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
     private class Ref<T extends FileObject> extends WeakReference<T> implements Runnable {
 
         public Ref(T fo) {
-            super(fo, Utilities.activeReferenceQueue());
+            super(fo, BaseUtilities.activeReferenceQueue());
         }
 
         // do the cleanup
