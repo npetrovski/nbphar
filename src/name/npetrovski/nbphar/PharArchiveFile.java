@@ -168,11 +168,11 @@ public class PharArchiveFile {
                 return;
             }
 
-            _entries = new HashMap();
+            _entries = new HashMap<String, ArchiveEntry>();
 
             Phar pa = new Phar(_file);
 
-            _entries.put(STUB_NAME, new SinglePharEntry(new PharEntry(null, STUB_NAME, PharCompression.NONE)));
+            _entries.put(STUB_NAME, new SinglePharEntry(new PharEntry(STUB_NAME, PharCompression.NONE)));
             for (Object row : pa.getEntries()) {
                 PharEntry entry = (PharEntry) row;
                 _entries.put(entry.getName(), new SinglePharEntry(entry));

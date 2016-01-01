@@ -81,7 +81,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
     /**
      * The soft part of the cache reference. For simplicity never null
      */
-    private transient Reference<Cache> softCache = new SoftReference(null);
+    private transient Reference<Cache> softCache = new SoftReference<Cache>(null);
     private transient FileObject foRoot;
     private transient FileChangeListener fcl;
 
@@ -642,8 +642,8 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
                     // #144166 - If duplicate entries found in pharArchiveFile, it is logged
                     // and only unique entries are show. It can happen because
                     // Ant's pharArchiveFile task can produce such aars.
-                    Set<String> duplicateCheck = new HashSet();
-                    Set<PharArchiveFile.ArchiveEntry> uniqueEntries = new HashSet();
+                    Set<String> duplicateCheck = new HashSet<String>();
+                    Set<PharArchiveFile.ArchiveEntry> uniqueEntries = new HashSet<PharArchiveFile.ArchiveEntry>();
                     boolean duplicateReported = false;
                     while (en.hasMoreElements()) {
                         PharArchiveFile.ArchiveEntry entry = en.nextElement();
@@ -661,7 +661,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
                     Cache newCache = new Cache(uniqueEntries);
                     lastModification = root.lastModified();
                     strongCache = newCache;
-                    softCache = new SoftReference(newCache);
+                    softCache = new SoftReference<Cache>(newCache);
 
                     return newCache;
                 } catch (Throwable t) {
@@ -837,7 +837,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
         byte[] names = new byte[1000];
         private int nameOffset = 0;
         int[] EMPTY = new int[0];
-        private final Map<String, Folder> folders = new HashMap();
+        private final Map<String, Folder> folders = new HashMap<String, Folder>();
 
         public Cache(Set<PharArchiveFile.ArchiveEntry> entries) {
             parse(entries);
@@ -925,7 +925,7 @@ public class PharArchiveFileSystem extends AbstractFileSystem {
             names = newNames;
 
             // strip all the indices arrays:
-            for (Iterator it = folders.values().iterator(); it.hasNext();) {
+            for (Iterator<?> it = folders.values().iterator(); it.hasNext();) {
                 ((Folder) it.next()).trunc();
             }
         }

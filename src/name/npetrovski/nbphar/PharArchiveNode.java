@@ -1,9 +1,8 @@
 package name.npetrovski.nbphar;
 
-import java.io.File;
+import de.ailis.pherialize.Mixed;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 import javax.swing.Action;
 import name.npetrovski.jphar.Phar;
 import name.npetrovski.jphar.PharCompression;
@@ -62,32 +61,36 @@ final class PharArchiveNode extends DataNode {
             public String getValue() throws IllegalAccessException, InvocationTargetException {
                 PharCompression c = PharArchiveNode.this.base.getCompression();
 
-                if (c.equals(PharCompression.BZIP2)) {
-                    return "BZIP2";
-                } else if (c.equals(PharCompression.GZIP)) {
-                    return "GZIP";
-                } else {
-                    return "NONE";
+                switch (c) {
+                    case BZIP2:
+                        return "BZIP2";
+                    case GZIP:
+                        return "GZIP";
+                    default:
+                        return "NONE";
                 }
             }
         };
 
         def.put(compression);
 
-        if (this.base.getMetadata().size() > 0) {
+        Mixed metadata = this.base.getMetadata();
+        
+        if (metadata != null) {
             Sheet.Set metaset = Sheet.createPropertiesSet();
             metaset.setDisplayName("Metadata");
             metaset.setName("Metadata");
             metaset.setValue("Metadata", "Metadata");
 
-            for (final Map.Entry<String, String> entry : this.base.getMetadata().entrySet()) {
-                metaset.put(new PropertySupport.ReadOnly<String>(entry.getKey(), String.class, entry.getKey(), null) {
-                    @Override
-                    public String getValue() throws IllegalAccessException, InvocationTargetException {
-                        return entry.getValue();
-                    }
-                });
-            }
+            final String data = String.valueOf(this.base.getMetadata().getValue());
+ 
+            metaset.put(new PropertySupport.ReadOnly<String>("value", String.class, "value", null) {
+                @Override
+                public String getValue() throws IllegalAccessException, InvocationTargetException {
+                    return data;
+                }
+            });
+
 
             sheet.put(metaset);
         }

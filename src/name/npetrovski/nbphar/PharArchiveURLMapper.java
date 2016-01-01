@@ -35,7 +35,7 @@ public class PharArchiveURLMapper extends URLMapper {
 
     static final String PHARARCHIVE_PROTOCOL = "jar";   //NOI18N
 
-    private static Map<File, SoftReference<FileSystem>> mountRoots = new ConcurrentHashMap();
+    private static Map<File, SoftReference<FileSystem>> mountRoots = new ConcurrentHashMap<File, SoftReference<FileSystem>>();
 
     public @Override
     URL getURL(FileObject fo, int type) {
@@ -235,7 +235,7 @@ public class PharArchiveURLMapper extends URLMapper {
         }
     }
 
-    private static final Map<URI, File> copiedJARs = new HashMap();
+    private static final Map<URI, File> copiedJARs = new HashMap<URI, File>();
 
     private static File copyJAR(FileObject fo, URI archiveFileURI, boolean replace) throws IOException {
         synchronized (copiedJARs) {
